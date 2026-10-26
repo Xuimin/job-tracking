@@ -301,6 +301,8 @@ fly deploy
 
 **Note:** Do not use SQLite on Fly; the disk is ephemeral. PWA works over HTTPS after the Docker build runs `npm run build`.
 
+If the build log shows `ondrej/php` or `apt install php8.3` errors, Fly is using **Nixpacks** instead of Docker. In the dashboard, choose **Dockerfile** as the build method (or ensure `fly.toml` has `[build] dockerfile = "Dockerfile"`), push to GitHub, and redeploy.
+
 ## Tests
 
 ```bash

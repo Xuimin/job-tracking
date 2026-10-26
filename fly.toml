@@ -3,6 +3,7 @@ app = 'job-tracker'
 primary_region = 'sin'
 
 [build]
+  dockerfile = "Dockerfile"
 
 [env]
   APP_ENV = 'production'
