@@ -8,6 +8,7 @@ export default defineConfig({
         laravel({ input: ['resources/js/app.jsx'], refresh: true }),
         react(),
         VitePWA({
+            injectRegister: false,
             registerType: 'autoUpdate',
             scope: '/',
             registerOptions: { scope: '/' },

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
-import { registerSW } from 'virtual:pwa-register';
 import '../css/app.css';
+import { registerPwa } from './registerPwa.js';
 import {
   OfflineError,
   cacheUser,
@@ -20,7 +20,7 @@ import {
   filterApplications,
 } from './offlineStore.js';
 
-registerSW({ immediate: true });
+registerPwa();
 
 const STATUSES = ['wishlist', 'applied', 'interview', 'offer', 'rejected'];
 const STATUS_LABELS = {
