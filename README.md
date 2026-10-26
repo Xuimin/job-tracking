@@ -197,9 +197,49 @@ resources/
 routes/web.php        `/` view + `/api/*` routes
 ```
 
+## Deploy on Render (recommended if Fly.io is painful)
+
+Uses the same [`Dockerfile`](Dockerfile) as Fly. **No CLI required** — GitHub + dashboard only. Free web tier spins down when idle (first request may take ~30s).
+
+### Option A — Blueprint (Postgres + web app in one flow)
+
+1. Push this repo to GitHub.
+2. [render.com](https://render.com) → sign up → **New** → **Blueprint**.
+3. Connect the repo. Render reads [`render.yaml`](render.yaml) and creates **job-tracker** (web) + **job-tracker-db** (Postgres).
+4. When prompted, set **sync: false** variables:
+   - `APP_KEY` — run locally: `php artisan key:generate --show`
+   - `APP_URL` — after deploy: `https://<your-service-name>.onrender.com` (shown on the service page)
+5. Wait for deploy. Open the URL → register → test the board.
+
+### Option B — Manual
+
+1. **New** → **PostgreSQL** (free). Copy the **Internal Database URL** (or External if required).
+2. **New** → **Web Service** → connect repo → **Language: Docker**.
+3. **Environment** (same as Fly/Railway):
+
+| Variable | Value |
+|----------|--------|
+| `APP_KEY` | `php artisan key:generate --show` |
+| `APP_URL` | `https://YOUR-SERVICE.onrender.com` |
+| `APP_ENV` | `production` |
+| `APP_DEBUG` | `false` |
+| `APP_NAME` | `Job Tracker` |
+| `DB_CONNECTION` | `pgsql` |
+| `DATABASE_URL` | Paste from Postgres dashboard |
+| `SESSION_DRIVER` | `database` |
+| `CACHE_STORE` | `database` |
+| `LOG_CHANNEL` | `stderr` |
+| `SESSION_SECURE_COOKIE` | `true` |
+
+4. **Health Check Path:** `/up` → **Create Web Service**.
+
+**Note:** Do not use SQLite on Render. Migrations run on container start (see `Dockerfile` `CMD`).
+
+---
+
 ## Deploy on Railway
 
-This repo includes [`railway.toml`](railway.toml) (build + start commands, health check on `/up`).
+This repo includes [`railway.toml`](railway.toml) (Docker build, health check on `/up`).
 
 ### 1. Push to GitHub
 
@@ -230,7 +270,7 @@ Railway deploys from Git. Your remote should look like `https://github.com/YOUR_
 4. **Settings** → **Networking** → **Generate Domain**.
 5. Wait for deploy. Open the domain, register, and test the board.
 
-Build runs `composer install`, `npm ci`, `npm run build`. Start runs migrations then `php artisan serve` on Railway’s `PORT`.
+Build uses the **Dockerfile** (Composer, Vite, production image). The container runs migrations then `php artisan serve` on Railway’s `PORT`.
 
 ### 3. After code changes
 
@@ -290,7 +330,7 @@ fly deploy
 fly open
 ```
 
-Register and test the board. Migrations run on each deploy via `release_command` in `fly.toml`.
+Register and test the board. Migrations run on container start (see `Dockerfile`).
 
 ### 5. Updates
 
