@@ -234,7 +234,7 @@ Uses the same [`Dockerfile`](Dockerfile) as Fly. **No CLI required** — GitHub 
 
 **Note:** Do not use SQLite on Render. Migrations run on container start (see `Dockerfile` `CMD`).
 
-**Database connection errors:** On the Postgres service, copy **Internal Database URL** (for web services on Render) as a **single line** into `DATABASE_URL`. If you see `could not translate host name` with a broken hostname, delete `DATABASE_URL` and re-add it via **job-tracker** → **Environment** → link the database, or paste again without line breaks. For external URLs use **External Database URL** and `DB_SSLMODE=require`.
+**Database connection errors (`could not translate host name dpg-…-a`):** Render’s short internal host often fails DNS from the web container. The app rewrites `dpg-xxxx-a` to `dpg-xxxx-a.singapore-postgres.render.com` when `RENDER` is set (see `RENDER_POSTGRES_HOST_SUFFIX` in `render.yaml`). You can also set **`DB_HOST`** or **`PGHOST`** to the full hostname from **External Database URL**, or replace **`DATABASE_URL`** with the full **External Database URL** (one line). Link Postgres under **job-tracker** → **Connections** and redeploy.
 
 ---
 

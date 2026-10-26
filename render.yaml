@@ -21,6 +21,8 @@ services:
         value: pgsql
       - key: DB_SSLMODE
         value: require
+      - key: RENDER_POSTGRES_HOST_SUFFIX
+        value: singapore-postgres.render.com
       - key: SESSION_DRIVER
         value: database
       - key: CACHE_STORE
