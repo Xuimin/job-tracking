@@ -1,5 +1,4 @@
-# Rename `app` after: fly apps create YOUR-NAME
-app = 'job-tracker'
+app = 'xm-job-tracking'
 primary_region = 'sin'
 
 [build]
@@ -10,6 +9,7 @@ primary_region = 'sin'
   APP_DEBUG = 'false'
   LOG_CHANNEL = 'stderr'
   DB_CONNECTION = 'pgsql'
+  DB_SSLMODE = 'require'
   SESSION_DRIVER = 'database'
   CACHE_STORE = 'database'
   QUEUE_CONNECTION = 'sync'
@@ -36,5 +36,3 @@ primary_region = 'sin'
   cpu_kind = 'shared'
   cpus = 1
 
-[deploy]
-  release_command = 'php artisan migrate --force'
