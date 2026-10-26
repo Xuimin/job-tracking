@@ -20,13 +20,15 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
 COPY . .
 COPY --from=assets /app/public/build ./public/build
 
-RUN composer dump-autoload --optimize-autoloader --no-scripts \
+RUN composer dump-autoload -o --no-scripts \
     && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data storage/logs bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
