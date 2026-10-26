@@ -1,20 +1,25 @@
+# fly.toml app configuration file generated for xm-job-tracking on 2026-10-26T11:32:10Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
 app = 'xm-job-tracking'
 primary_region = 'sin'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  APP_ENV = 'production'
   APP_DEBUG = 'false'
-  LOG_CHANNEL = 'stderr'
+  APP_ENV = 'production'
+  CACHE_STORE = 'database'
   DB_CONNECTION = 'pgsql'
   DB_SSLMODE = 'require'
-  SESSION_DRIVER = 'database'
-  CACHE_STORE = 'database'
+  LOG_CHANNEL = 'stderr'
   QUEUE_CONNECTION = 'sync'
-  SESSION_SECURE_COOKIE = 'true'
+  SESSION_DRIVER = 'database'
   SESSION_SAME_SITE = 'lax'
+  SESSION_SECURE_COOKIE = 'true'
 
 [http_service]
   internal_port = 8080
@@ -35,4 +40,4 @@ primary_region = 'sin'
   memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
-
+  memory_mb = 512
