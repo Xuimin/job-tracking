@@ -234,6 +234,8 @@ Uses the same [`Dockerfile`](Dockerfile) as Fly. **No CLI required** — GitHub 
 
 **Note:** Do not use SQLite on Render. Migrations run on container start (see `Dockerfile` `CMD`).
 
+**Database connection errors:** On the Postgres service, copy **Internal Database URL** (for web services on Render) as a **single line** into `DATABASE_URL`. If you see `could not translate host name` with a broken hostname, delete `DATABASE_URL` and re-add it via **job-tracker** → **Environment** → link the database, or paste again without line breaks. For external URLs use **External Database URL** and `DB_SSLMODE=require`.
+
 ---
 
 ## Deploy on Railway
