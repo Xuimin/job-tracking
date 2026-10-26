@@ -28,7 +28,9 @@ RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoload
 COPY . .
 COPY --from=assets /app/public/build ./public/build
 
-RUN composer dump-autoload -o --no-scripts \
+RUN rm -f bootstrap/cache/packages.php bootstrap/cache/services.php bootstrap/cache/config.php \
+    && composer dump-autoload -o \
+    && php artisan package:discover --ansi \
     && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data storage/logs bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
