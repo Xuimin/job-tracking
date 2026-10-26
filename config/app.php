@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__.'/../bootstrap/app_url.php';
+
 return [
 
     /*
@@ -52,7 +54,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL') ?: env('RENDER_EXTERNAL_URL', 'http://localhost'),
+    'url' => resolved_app_url(),
 
     /*
     |--------------------------------------------------------------------------

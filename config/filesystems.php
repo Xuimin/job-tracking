@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__.'/../bootstrap/app_url.php';
+
 return [
 
     /*
@@ -41,7 +43,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'url' => resolved_app_url().'/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
