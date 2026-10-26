@@ -238,6 +238,69 @@ Push to GitHub; Railway redeploys automatically. For env-only changes, redeploy 
 
 **Note:** Use PostgreSQL on Railway, not SQLite (the filesystem is not durable). PWA install works over HTTPS once `npm run build` has run in deploy.
 
+## Deploy on Fly.io
+
+This repo includes a [`Dockerfile`](Dockerfile) and [`fly.toml`](fly.toml).
+
+### 1. Install Fly CLI and sign in
+
+```bash
+# Windows (PowerShell)
+powershell -Command "iwr https://fly.io/install.ps1 -useb | iex"
+
+fly auth login
+```
+
+### 2. Create the app and Postgres
+
+From the project root:
+
+```bash
+fly apps create YOUR-APP-NAME
+```
+
+Edit `fly.toml` and set `app = 'YOUR-APP-NAME'` (and `primary_region` if you want, e.g. `sin` for Singapore).
+
+```bash
+fly postgres create --name YOUR-APP-NAME-db --region sin
+fly postgres attach YOUR-APP-NAME-db --app YOUR-APP-NAME
+```
+
+Attaching sets `DATABASE_URL` on the app (Laravel reads it for `pgsql`).
+
+### 3. Secrets and URL
+
+```bash
+php artisan key:generate --show
+fly secrets set APP_KEY="base64:..." APP_NAME="Job Tracker"
+fly deploy
+fly certs add YOUR-APP-NAME.fly.dev
+fly secrets set APP_URL="https://YOUR-APP-NAME.fly.dev"
+```
+
+Redeploy once after setting `APP_URL` so generated links and cookies match:
+
+```bash
+fly deploy
+```
+
+### 4. Open the site
+
+```bash
+fly open
+```
+
+Register and test the board. Migrations run on each deploy via `release_command` in `fly.toml`.
+
+### 5. Updates
+
+```bash
+git push   # if using GitHub + Fly remote build
+fly deploy
+```
+
+**Note:** Do not use SQLite on Fly; the disk is ephemeral. PWA works over HTTPS after the Docker build runs `npm run build`.
+
 ## Tests
 
 ```bash
