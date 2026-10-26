@@ -197,6 +197,47 @@ resources/
 routes/web.php        `/` view + `/api/*` routes
 ```
 
+## Deploy on Railway
+
+This repo includes [`railway.toml`](railway.toml) (build + start commands, health check on `/up`).
+
+### 1. Push to GitHub
+
+Railway deploys from Git. Your remote should look like `https://github.com/YOUR_USER/job-tracking.git`.
+
+### 2. Create the Railway project
+
+1. [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** → select this repository.
+2. Add **PostgreSQL** to the project (**+ New** → **Database** → **PostgreSQL**).
+3. Open your **web service** (the repo) → **Variables**. Add:
+
+| Variable | Value |
+|----------|--------|
+| `APP_NAME` | `Job Tracker` |
+| `APP_ENV` | `production` |
+| `APP_DEBUG` | `false` |
+| `APP_KEY` | Output of `php artisan key:generate --show` (run locally once) |
+| `APP_URL` | `https://${{RAILWAY_PUBLIC_DOMAIN}}` |
+| `DB_CONNECTION` | `pgsql` |
+| `DB_URL` | `${{Postgres.DATABASE_URL}}` — use your Postgres service name if it is not `Postgres` (Railway variable picker) |
+| `SESSION_DRIVER` | `database` |
+| `CACHE_STORE` | `database` |
+| `QUEUE_CONNECTION` | `sync` |
+| `SESSION_SECURE_COOKIE` | `true` |
+| `SESSION_SAME_SITE` | `lax` |
+| `LOG_CHANNEL` | `stderr` |
+
+4. **Settings** → **Networking** → **Generate Domain**.
+5. Wait for deploy. Open the domain, register, and test the board.
+
+Build runs `composer install`, `npm ci`, `npm run build`. Start runs migrations then `php artisan serve` on Railway’s `PORT`.
+
+### 3. After code changes
+
+Push to GitHub; Railway redeploys automatically. For env-only changes, redeploy from the Railway dashboard.
+
+**Note:** Use PostgreSQL on Railway, not SQLite (the filesystem is not durable). PWA install works over HTTPS once `npm run build` has run in deploy.
+
 ## Tests
 
 ```bash
