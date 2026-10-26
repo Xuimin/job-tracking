@@ -206,9 +206,8 @@ Uses the same [`Dockerfile`](Dockerfile) as Fly. **No CLI required** — GitHub 
 1. Push this repo to GitHub.
 2. [render.com](https://render.com) → sign up → **New** → **Blueprint**.
 3. Connect the repo. Render reads [`render.yaml`](render.yaml) and creates **job-tracker** (web) + **job-tracker-db** (Postgres).
-4. When prompted, set **sync: false** variables:
-   - `APP_KEY` — run locally: `php artisan key:generate --show`
-   - `APP_URL` — after deploy: `https://<your-service-name>.onrender.com` (shown on the service page)
+4. When prompted, set **`APP_KEY`** (run locally: `php artisan key:generate --show`).  
+   `APP_URL` is optional on Render — the app falls back to **`RENDER_EXTERNAL_URL`** automatically.
 5. Wait for deploy. Open the URL → register → test the board.
 
 ### Option B — Manual
